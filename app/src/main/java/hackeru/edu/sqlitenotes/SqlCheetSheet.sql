@@ -123,3 +123,109 @@ JOIN Customers
 ON Customers.CustomerID = Orders.CustomerID
 WHERE Products.ProductId = 1
 ORDER BY Quantity DESC
+
+
+-- CREATE TABLE:
+CREATE TABLE table_name (
+    column1 datatype,
+    column2 datatype,
+    column3 datatype,
+   ....
+);
+
+-- 1:1
+CREATE TABLE Students(
+	StudentID INTEGER,
+    firstName TEXT,
+    lastName TEXT,
+	socialID TEXT,
+	phone TEXT
+)
+
+-- One To Many 1:*
+CREATE TABLE Students(
+	StudentID INTEGER,
+    firstName TEXT,
+    lastName TEXT,
+	socialID TEXT,
+)
+
+CREATE TABLE Phones(
+	PhoneID INTEGER,
+    number TEXT,
+    studentID INTEGER
+)
+
+--Exercise:
+-----------------------------------
+--Create 3 Tables:
+--Courses, Student, StudentCourses
+--
+--Course:
+--id, courseName, Syllabus
+--
+--Student:
+--id, firstName, lastName, socialID
+--
+--StudentCourses:
+--id, studentID, courseID
+-------------------------------------
+
+INSERT INTO Students(studentID, firstName, lastName, socialID)
+VALUES(1, 'Moshe', 'Doe', '06740684680')
+
+INSERT INTO Students(studentID, firstName, lastName, socialID)
+VALUES(2, 'Vice', 'Hagev', '0654068089')
+
+--  A Little problematic with the id
+-- AUTO_INCREMENT:
+CREATE TABLE People (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    lastName TEXT NOT NULL,
+    firstName TEXT,
+    age INTEGER
+);
+
+-- DELETE:
+DELETE FROM Customers -- Danger!
+
+DELETE FROM Customers
+WHERE Country = 'Mexico'
+
+UPDATE Customers
+SET Country = 'Israel' -- Dangerous
+
+-- better:
+UPDATE Customers
+SET Country = 'ISRAEL'
+WHERE Country = 'Sweden'
+
+--Constraints:
+-- NOT NULL
+-- UNIQUE
+-- PRIMARY KEY
+CREATE TABLE Students(
+	id INTEGER PRIMARY KEY NOT NULL, -- it's now more efficient to look up by id... Supports JOINS
+    firstName TEXT NOT NULL,
+    lastName TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE
+)
+
+-- DEFAULT:
+CREATE TABLE Order(
+	id INTEGER PRIMARY KEY NOT NULL, -- it's now more efficient to look up by id... Supports JOINS
+    customerID INTEGER NOT NULL,
+    orderDate DATE DEFAULT GETDATE()
+)
+
+-- CHECK
+CREATE TABLE Persons (
+    ID INTEGER NOT NULL,
+    LastName TEXT NOT NULL,
+    FirstName TEXT,
+    Age INTEGER CHECK (Age>=18)
+);
+
+
+-- DROP TABLE:
+DROP TABLE Students;
