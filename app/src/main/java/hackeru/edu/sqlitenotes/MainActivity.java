@@ -155,7 +155,6 @@ public class MainActivity extends AppCompatActivity {
             return new NotesViewHolder(v);
         }
 
-
         @Override
         public void onBindViewHolder(NotesViewHolder h, int position) {
             Note model = notes.get(position);
