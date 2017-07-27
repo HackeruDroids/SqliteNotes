@@ -11,6 +11,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -30,14 +32,18 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void readFromDB() {
+    private ArrayList<Note> readFromDB() {
         NotesDBHelper helper = new NotesDBHelper(this /*context*/);
         SQLiteDatabase db = helper.getReadableDatabase();
         //db.query("notes", new String[]{"title", "content"}, null, null, null, null, "title ASC");
         Cursor cursor = db.query("notes", null, null, null, null, null, null);
 
+        ArrayList<Note> notes = new ArrayList<>();
+
+
         if (cursor == null || !cursor.moveToFirst()) {
-            return;
+            Toast.makeText(this, "No Notes Yet...", Toast.LENGTH_SHORT).show();
+            return notes;
         }
 
         do {
@@ -46,8 +52,10 @@ public class MainActivity extends AppCompatActivity {
             String title = cursor.getString(cursor.getColumnIndex("title"));
             String content = cursor.getString(cursor.getColumnIndex("content"));
 
-            Toast.makeText(this, id + "\n " + title + "\n" + content, Toast.LENGTH_SHORT).show();
+            notes.add(new Note(id, title, content));
         } while (cursor.moveToNext());
+
+        return notes;
     }
 
     private void addNote() {
