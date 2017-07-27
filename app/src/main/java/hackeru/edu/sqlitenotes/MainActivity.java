@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
                 getInstance(this).
                 registerReceiver(receiver, new IntentFilter("noteAdded"));
     }
+
     //stop listening to the event.
     @Override
     protected void onStop() {
@@ -171,6 +172,7 @@ public class MainActivity extends AppCompatActivity {
 
         static final class NotesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             TextView tvTitle, tvContent;
+            FloatingActionButton fabDelete;
             AppCompatActivity activity;
             Note model;
 
@@ -178,15 +180,23 @@ public class MainActivity extends AppCompatActivity {
                 super(v);
                 tvTitle = v.findViewById(R.id.tvTitle);
                 tvContent = v.findViewById(R.id.tvContent);
+                fabDelete = v.findViewById(R.id.fabDelete);
+                fabDelete.setOnClickListener(this);
                 v.setOnClickListener(this);
             }
 
             @Override
             public void onClick(View view) {
-                AddNoteFragment noteFragment =
-                        AddNoteFragment.newInstance(AddNoteFragment.ACTION_UPDATE ,model);
-
-                noteFragment.show(activity.getSupportFragmentManager(), "dialog");
+                if (view == fabDelete) {
+                    NotesDBHelper helper = new NotesDBHelper(activity);
+                    helper.getWritableDatabase().delete("notes", "_ID = ?", new String[]{"" + model.getId()});
+                    //((MainActivity)activity).reloadRecycler();
+                    LocalBroadcastManager.getInstance(activity).sendBroadcast(new Intent("noteAdded"));
+                } else {
+                    AddNoteFragment noteFragment =
+                            AddNoteFragment.newInstance(AddNoteFragment.ACTION_UPDATE, model);
+                    noteFragment.show(activity.getSupportFragmentManager(), "dialog");
+                }
             }
         }
     }
