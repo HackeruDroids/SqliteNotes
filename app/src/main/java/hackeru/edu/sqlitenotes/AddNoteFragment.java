@@ -2,10 +2,12 @@ package hackeru.edu.sqlitenotes;
 
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +57,11 @@ public class AddNoteFragment extends BottomSheetDialogFragment implements View.O
         values.put("content", content);
 
         db.insert("Notes", null, values);
+
+        //notify the listeners:
+        LocalBroadcastManager.
+                getInstance(getContext()).
+                sendBroadcast(new Intent("noteAdded"));
 
         dismiss();
     }
