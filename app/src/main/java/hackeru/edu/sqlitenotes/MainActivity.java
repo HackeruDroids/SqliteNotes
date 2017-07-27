@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private ArrayList<Note> readFromDB() {
-        NotesDBHelper helper = new NotesDBHelper(this /*context*/);
+        NotesDBHelper helper = new NotesDBHelper(this /*activity*/);
         SQLiteDatabase db = helper.getReadableDatabase();
         //db.query("notes", new String[]{"title", "content"}, null, null, null, null, "title ASC");
         Cursor cursor = db.query("notes", null, null, null, null, null, null);
@@ -109,10 +109,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addNote() {
-        AddNoteFragment noteFragment = new AddNoteFragment();
-        noteFragment.show(getSupportFragmentManager(), "dialog");
+        AddNoteFragment noteFragment =
+                AddNoteFragment.newInstance(AddNoteFragment.ACTION_INSERT, null);
 
-        readFromDB();
+        noteFragment.show(getSupportFragmentManager(), "dialog");
     }
 
     @Override
@@ -138,15 +138,15 @@ public class MainActivity extends AppCompatActivity {
 
     static class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHolder> {
         //properties:
-        Context context;
+        AppCompatActivity activity;
         LayoutInflater inflater;
         ArrayList<Note> notes;
 
         //constructor:
-        public NotesAdapter(Context context, ArrayList<Note> notes) {
-            this.context = context;
+        public NotesAdapter(AppCompatActivity activity, ArrayList<Note> notes) {
+            this.activity = activity;
             this.notes = notes;
-            inflater = LayoutInflater.from(context);
+            inflater = LayoutInflater.from(activity);
         }
 
         @Override
@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
             h.tvTitle.setText(model.getTitle());
             h.tvContent.setText(model.getContent());
             h.model = model;
-            h.context = context;
+            h.activity = activity;
         }
 
         @Override
@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
 
         static final class NotesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             TextView tvTitle, tvContent;
-            Context context;
+            AppCompatActivity activity;
             Note model;
 
             NotesViewHolder(View v) {
@@ -184,7 +184,10 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
+                AddNoteFragment noteFragment =
+                        AddNoteFragment.newInstance(AddNoteFragment.ACTION_UPDATE ,model);
 
+                noteFragment.show(activity.getSupportFragmentManager(), "dialog");
             }
         }
     }

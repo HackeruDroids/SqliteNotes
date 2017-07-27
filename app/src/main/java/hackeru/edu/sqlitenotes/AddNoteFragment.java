@@ -20,8 +20,22 @@ import android.widget.Toast;
  * A simple {@link Fragment} subclass.
  */
 public class AddNoteFragment extends BottomSheetDialogFragment implements View.OnClickListener {
+    public static final int ACTION_INSERT = 1;
+    public static final int ACTION_DELETE = 2;
+    public static final int ACTION_UPDATE = 3;
+
 
     EditText etNoteTitle, etNoteContent;
+
+    public static AddNoteFragment newInstance(int action, Note note) {
+        Bundle args = new Bundle();
+        args.putInt("action", action);
+        args.putParcelable("note", note);
+
+        AddNoteFragment fragment = new AddNoteFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,6 +48,14 @@ public class AddNoteFragment extends BottomSheetDialogFragment implements View.O
         Button btnSaveNote = v.findViewById(R.id.btnSaveNote);
         btnSaveNote.setOnClickListener(this);
 
+        int action = getArguments().getInt("action");
+        if (action == ACTION_UPDATE) {
+            Note note = getArguments().getParcelable("note");
+            if (note != null) {
+                etNoteContent.setText(note.getContent());
+                etNoteTitle.setText(note.getTitle());
+            }
+        }
         return v;
     }
 
@@ -56,7 +78,15 @@ public class AddNoteFragment extends BottomSheetDialogFragment implements View.O
         values.put("title", title);
         values.put("content", content);
 
-        db.insert("Notes", null, values);
+
+        int action = getArguments().getInt("action");
+        if (action == ACTION_INSERT) {
+            db.insert("Notes", null, values);
+        } else if (action == ACTION_UPDATE) {
+            Note note = getArguments().getParcelable("note");
+            if (note != null)
+                db.update("notes", values, "_ID = ?", new String[]{note.getId() + ""});
+        }
 
         //notify the listeners:
         LocalBroadcastManager.
