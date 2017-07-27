@@ -11,8 +11,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class NotesDBHelper extends SQLiteOpenHelper {
     private static final String createTableNotes =
             "CREATE TABLE " + NotesContract.NotesTable.tableName + "(" +
-                    NotesContract.NotesTable.colID + "INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    NotesContract.NotesTable.colTitle + "TEXT NOT NULL," +
+                    NotesContract.NotesTable.colID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    NotesContract.NotesTable.colTitle + " TEXT NOT NULL," +
                     NotesContract.NotesTable.colContent + " TEXT" +
                     ");";
 
